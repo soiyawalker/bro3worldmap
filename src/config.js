@@ -13,12 +13,9 @@ var divideSize = 100;
 // ファイル名と色の指定
 var alliances = [
     ["neko_data.csv", "rgba(0, 0, 255, 1)"], 
-//    ["neko_sibu_data.csv", "rgba(0, 255, 255, 1)"], 
     ["kir_data.csv", "rgba(0, 255, 255, 1)"], 
     ["taiten_data.csv", "rgba(255, 165, 0, 1)"], 
-//    ["taiten_shibu_data.csv", "rgba(200, 100, 0, 1)"], 
     ["tsuki_data.csv", "rgba(255, 0, 0, 1)"], 
-//    ["tsuki_sibu_data.csv", "rgba(139, 0, 0, 1)"], 
     ["furikuma.csv", "rgba(0, 200, 0, 1)"], 
     ["dc.csv", "rgba(173, 255, 47, 1)"], 
     ["gonta.csv", "rgba(173, 255, 47, 1)"], 
