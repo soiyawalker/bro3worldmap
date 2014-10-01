@@ -29,9 +29,6 @@ var urlBase = "http://m17.3gokushi.jp/map.php?x=[x]&y=[y]";
 var defaultColors = {
     friend: ["rgba(0, 0, 255, 1)", "rgba(0, 255, 255, 1)", "rgba(80, 77, 203, 1)"], 
     enemy: ["rgba(255, 0, 0, 1)", "rgba(255, 165, 0, 1)", "rgba(183, 65, 14, 1)"], 
-    neutral: ["rgba(0, 200, 0, 1)", "rgba(173, 255, 47, 1)", "rgba(103, 228, 126, 1)"], 
-    friendIndex: 0, 
-    enemyIndex: 0, 
-    neutralIndex: 0
+    neutral: ["rgba(0, 200, 0, 1)", "rgba(173, 255, 47, 1)", "rgba(103, 228, 126, 1)"]
 }
 

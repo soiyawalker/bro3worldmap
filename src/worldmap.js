@@ -118,6 +118,10 @@ function loadData(data, color) {
 }
 
 $(document).ready(function(){
+    defaultColors.friendIndex = 0;
+    defaultColors.enemyIndex = 0;
+    defaultColors.neutralIndex = 0;
+    
     if (getUrlVars()["manual"]) {
         $("#formArea").css("display", "block");
         drawMapAll(dataList);
