@@ -90,6 +90,7 @@ function initCanvas() {
     ctx.fillStyle = "rgba(0, 0, 0, 1)";
     ctx.clearRect(0, 0, worldWidth + 1, worldHeight + 1);
     ctx.fillRect(0, 0, worldWidth + 1, worldHeight + 1);
+    var divideNumber = Math.floor(worldSize.x / divideSize);
     
     // 枠線の描画
     for (var i = 1; i < divideNumber; i++) {
