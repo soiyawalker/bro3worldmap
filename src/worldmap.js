@@ -1,6 +1,10 @@
 var allianceInfos = [];
 var dataList = [];
 
+//初期倍率
+var scale = 1;
+
+
 function drawMap(data, color) {
     var worldWidth = worldSize["x"];
     var worldHeight = worldSize["y"];
@@ -80,15 +84,33 @@ function drawMapAll(dataList){
 
 // Canvasの初期設定
 function initCanvas() {
+	
     var worldWidth = worldSize["x"];
     var worldHeight = worldSize["y"];
-    $("#map_canvas").attr("width", worldWidth + 1);
-    $("#map_canvas").attr("height", worldHeight + 1);
+	
+
+    $("#map_canvas").attr("width", worldWidth*scale + 1);
+    $("#map_canvas").attr("height", worldHeight*scale + 1);
     
     var canvas = document.getElementById('map_canvas');
+	
+	
     var ctx = canvas.getContext("2d");
+	
+    
+    ctx.scale(scale, scale);//描画倍率
+
+    $("#mapDragArea").draggable({
+        scroll: false,
+		start: function(event, ui) {
+ 			$(this).addClass('noClick');
+ 		}
+    });
+
+	
     ctx.fillStyle = "rgba(0, 0, 0, 1)";
-    ctx.clearRect(0, 0, worldWidth + 1, worldHeight + 1);
+	ctx.clearRect(0,0,worldWidth*scale + 1,worldHeight*scale + 1);//再描画
+
     ctx.fillRect(0, 0, worldWidth + 1, worldHeight + 1);
     var divideNumber = Math.floor(worldSize.x / divideSize);
     
@@ -118,11 +140,32 @@ function loadData(data, color) {
     return csv;
 }
 
+//コントローラ動作
+function initController(dataList){	
+	$('#controller').draggable({
+        scroll: false
+    });
+	
+	//倍率変更プルダウン動作
+	$("#scaleChanger").val(1);
+	$("#scaleChanger").change(function(){ 
+
+    	scale=$(this).val();
+        drawMapAll(dataList);
+		
+		$("#mapDragArea").css({"left":0, "top":0})		//サイズ変更時の位置初期化
+
+    })
+
+	
+}
+
 $(document).ready(function(){
     defaultColors.friendIndex = 0;
     defaultColors.enemyIndex = 0;
     defaultColors.neutralIndex = 0;
     
+	
     if (getUrlVars()["manual"]) {
         $("#formArea").css("display", "block");
         drawMapAll(dataList);
@@ -144,21 +187,34 @@ $(document).ready(function(){
         drawMapAll(dataList);
         alert("処理完了");
     }
+
+	initController(dataList);
     
     // 開発中の機能(URLパラメータ「dev=true」で有効化)
     if (getUrlVars()["dev"]) {
-        $("#map_canvas").mousedown(function(e){
-            // クリックするとマップの位置を表示
-            var x = e.pageX - 800;
-            var y = e.pageY * -1 + 800;
-            var url = urlBase.replace("[x]", x).replace("[y]", y);
-            window.open(url, '_blank');
+        $("#map_canvas").click(function(e){			
+			if($("#mapDragArea").hasClass('noClick')){	//drag終了時はリンクさせない
+				$("#mapDragArea").removeClass('noClick');
+				return false;
+			}else{
+				// クリックするとマップの位置を表示
+				var mapX = $("#mapDragArea").offset().left;
+				var mapY = $("#mapDragArea").offset().top;
+			
+				var x = (e.pageX - 800*scale - mapX)/scale;
+				var y = (e.pageY * -1 + 800*scale + mapY)/scale;
+				var url = urlBase.replace("[x]", x).replace("[y]", y);
+				window.open(url, '_blank');
+			}
         });
     }
     
     $("#map_canvas").mousemove(function(e){
-        var x = e.pageX - 800;
-        var y = e.pageY * -1 + 800;
+    	var mapX = $("#mapDragArea").offset().left;
+    	var mapY = $("#mapDragArea").offset().top;
+    
+        var x = Math.floor((e.pageX - 800*scale - mapX)/scale);
+        var y = Math.floor((e.pageY * -1 + 800*scale + mapY)/scale);
         
         $("#tooltip").css("display", "inline");
         $("#tooltip").css("left", e.pageX + 15);
