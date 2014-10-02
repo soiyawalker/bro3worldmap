@@ -5,12 +5,33 @@
     
     <!-- jQuery 2.xにしてもたぶん大丈夫 -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
     <script type="text/javascript" src="./src/config.js"></script>
     <script type="text/javascript" src="./src/worldmap.js"></script>
 </head>
 <body style="margin: 0; padding: 0;">
 
+<div id="canvasWrapper" style="height:100%;overflow:hidden;">
+<div id="mapDragArea">
 <canvas id="map_canvas"></canvas>
+</div>
+</div>
+
+<div style="z-index:9999;position:absolute;top:0;padding:5px 5px 5px 5px;background:rgba(255, 255, 255, 0.8);" id="controller">
+<dl style="margin:0;">
+<dt style="float:left;width:60px;font-size:78%;">倍率</dt>
+<dd style="margin-left:70px;">
+<select id="scaleChanger">
+<option value="1">1倍</option>
+<option value="2">2倍</option>
+<option value="3">3倍</option>
+<option value="4">4倍</option>
+</select>
+</dd>
+</dl>
+</div>
+
+
 <div id="info"></div>
 
 <div id="tooltip" style="display: none; position: absolute; background-color: white;"></div>
