@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Bro3worldmap : ">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Bro3worldmap</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/soiyawalker/bro3worldmap">View on GitHub</a>
+
+          <h1 id="project_title">Bro3worldmap</h1>
+          <h2 id="project_tagline"></h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/soiyawalker/bro3worldmap/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/soiyawalker/bro3worldmap/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%E4%B8%89%E5%9B%BD%E5%BF%97%E5%90%91%E3%81%91%E5%85%A8%E4%BD%93%E3%83%9E%E3%83%83%E3%83%97%E4%BD%9C%E6%88%90%E3%83%84%E3%83%BC%E3%83%AB" class="anchor" href="#%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%E4%B8%89%E5%9B%BD%E5%BF%97%E5%90%91%E3%81%91%E5%85%A8%E4%BD%93%E3%83%9E%E3%83%83%E3%83%97%E4%BD%9C%E6%88%90%E3%83%84%E3%83%BC%E3%83%AB"><span class="octicon octicon-link"></span></a>ブラウザ三国志向け全体マップ作成ツール</h1>
+
+<p>本ツールはブラウザ三国志の全体地図を作成するためのツールです。
+遠征や戦争にご活用ください。</p>
+
+<ul>
+<li>地図サンプル：<a href="https://dl.dropboxusercontent.com/u/48977850/bro3/histories/bro3_image_20141001_01.png">https://dl.dropboxusercontent.com/u/48977850/bro3/histories/bro3_image_20141001_01.png</a>
+</li>
+</ul><p>本ツールは、ブラウザ三国志beyondの「同盟員全領地座標csv」取得機能を使っていますが、このbeyondの機能はサーバーに負荷がかかるので、必要以上に使わないようにしてください。（できれば、生成した地図は鯖全体で共有）</p>
+
+<h2>
+<a name="%E5%BF%85%E8%A6%81%E8%A6%81%E4%BB%B6" class="anchor" href="#%E5%BF%85%E8%A6%81%E8%A6%81%E4%BB%B6"><span class="octicon octicon-link"></span></a>必要要件</h2>
+
+<ul>
+<li>ブラウザ：firefox もしくは chrome</li>
+<li>ブラウザ三国志beyond（データ収集に使用します）</li>
+</ul><p>※ 本ツールはfirefoxでの使用を推奨しています。Chromeを使う場合は、起動時に「--allow-file-access-from-files」オプションを追加しないと動作しません</p>
+
+<h2>
+<a name="%E4%BD%BF%E3%81%84%E6%96%B9" class="anchor" href="#%E4%BD%BF%E3%81%84%E6%96%B9"><span class="octicon octicon-link"></span></a>使い方</h2>
+
+<ol>
+<li>右側の「Download ZIP」より本ツールをダウンロードして、zipファイルを解凍してください</li>
+<li>「data」フォルダの中にcsvファイル入れてください（csv作成方法は「CSVファイル作成方法について」を見てください）</li>
+<li>「src」フォルダの中にあるconfig.jsに「ファイル名と色の指定」という項目があるので、手順2で作成したcsvファイル名と色を追加してください</li>
+<li>bro3worldmap.htmlをブラウザにドラッグ＆ドロップしてください。地図が表示されます</li>
+<li>画像を右クリックして「名前をつけて画像を保存」を選択すると画像を保存することができます</li>
+</ol><h3>
+<a name="csv%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E4%BD%9C%E6%88%90%E6%96%B9%E6%B3%95%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6" class="anchor" href="#csv%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E4%BD%9C%E6%88%90%E6%96%B9%E6%B3%95%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6"><span class="octicon octicon-link"></span></a>CSVファイル作成方法について</h3>
+
+<ol>
+<li>ブラウザ三国志beyondをインストールしてください</li>
+<li>全体マップに表示する同盟のトップページに移動してください</li>
+<li>同盟ページの下部に「同盟員全領地座標csv」というリンクから表示されるデータをコピーして、メモ帳などのテキストエディタにペーストしてください</li>
+<li>メモ帳を使う場合は、「名前をつけて保存」から保存する際に「保存」ボタン左側の「文字コード」より「UTF-8」を選んでください</li>
+</ol><p>また、「data」フォルダの中には、mixi 17鯖の主要同盟のデータが入っています。必要なければ削除してください。</p>
+
+<h3>
+<a name="configjs%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9" class="anchor" href="#configjs%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9"><span class="octicon octicon-link"></span></a>config.jsの書き方</h3>
+
+<p>config.jsに「ファイル名と色の指定」という項目があるので、作成したcsvファイル名と色を指定してください。
+a1同盟（赤、a1.csv）, a2同盟（青、a2.csv）, a3同盟（緑、a3.csv）がある場合は、以下のようになります。</p>
+
+<pre><code>// ファイル名と色の指定
+var alliances = [
+    ["a1.csv", "rgba(255, 0, 0, 1)"], 
+    ["a2.csv", "rgba(0, 0, 255, 1)"], 
+    ["a3.csv", "rgba(0, 255, 0, 1)"]
+]
+</code></pre>
+
+<h2>
+<a name="%E6%9B%B4%E6%96%B0%E5%B1%A5%E6%AD%B4" class="anchor" href="#%E6%9B%B4%E6%96%B0%E5%B1%A5%E6%AD%B4"><span class="octicon octicon-link"></span></a>更新履歴</h2>
+
+<ul>
+<li>2014/10/02 鯛。さんのプルリクを反映。拡大、マップをドラッグして移動する機能を追加</li>
+<li>2014/10/01 Github公開</li>
+<li>2014/9/28 データの手動追加機能にて重複して同盟が追加されてしまう問題を修正</li>
+<li>2014/9/28 データの手動追加機能を追加（手動追加モード）</li>
+<li>2014/9/27 作成</li>
+</ul><h2>
+<a name="%E9%96%8B%E7%99%BA%E8%80%85%E5%90%91%E3%81%91" class="anchor" href="#%E9%96%8B%E7%99%BA%E8%80%85%E5%90%91%E3%81%91"><span class="octicon octicon-link"></span></a>開発者向け</h2>
+
+<p>改造歓迎です。プルリクエストを送ってもらえたらもっと嬉しいです。</p>
+
+<ul>
+<li>URLパラメータ
+
+<ul>
+<li>「manual=true」とつけると、csvファイルがなくても画像を作れるモードに切り替わります。デバッグ用にどうぞ</li>
+<li>「dev=true」をつけると、開発中の機能にアクセスできます。（現時点ではマップをクリックするとブラ三の地図に移動する機能のみ）</li>
+</ul>
+</li>
+</ul><h2>
+<a name="%E6%94%B9%E5%96%84%E3%81%97%E3%81%9F%E3%81%84%E3%81%93%E3%81%A8%E3%82%84%E6%B0%97%E3%81%AB%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%84%E3%82%8B%E3%81%93%E3%81%A8" class="anchor" href="#%E6%94%B9%E5%96%84%E3%81%97%E3%81%9F%E3%81%84%E3%81%93%E3%81%A8%E3%82%84%E6%B0%97%E3%81%AB%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%84%E3%82%8B%E3%81%93%E3%81%A8"><span class="octicon octicon-link"></span></a>改善したいことや気になっていること</h2>
+
+<ul>
+<li>csvファイルがUTF-8限定だと一般ユーザーには難しいので文字コードを問わないようにしたい</li>
+<li>一般ユーザーがconfig.jsを書くのは難しいのでもっと簡単な手段を準備したい（こちらもCSV化？）</li>
+<li>同盟一覧が左上固定だと使いにくいので、動かせるようにしたい</li>
+<li>色の指定が面倒なので改善したい（誰か敵、味方、中立などのカテゴリごとに色セットを作って欲しい）</li>
+<li>地図サイズが奇数（ブラ三は1601x1601）を想定しているので、他のゲームでは使いにくいかも</li>
+<li>地図の拡大縮小（拡大、完了）</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Bro3worldmap maintained by <a href="https://github.com/soiyawalker">soiyawalker</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
