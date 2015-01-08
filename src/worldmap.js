@@ -1,5 +1,7 @@
 var allianceInfos = [];
 var dataList = [];
+var npcList = [];
+var mapdata = {};
 
 //初期倍率
 var scale = 1;
@@ -37,10 +39,36 @@ function drawMap(data, color) {
             });
             
             ctx.fillRect(x, y, 1, 1);
+            mapdata[this[3] + "," + this[4]] = this[2] + ":" + [this[1], this[0]].join("@");
         }
     });
     ctx.stroke();
 };
+
+function drawNPC(data, color) {
+    var worldWidth = worldSize["x"];
+    var worldHeight = worldSize["y"];
+    var canvas = document.getElementById('map_canvas');
+    var ctx = canvas.getContext("2d");
+
+    // NPCのプロット
+    ctx.beginPath();
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 1.0;
+    ctx.globalCompositeOperation = "source-over";
+    ctx.imageSmoothingEnabled = false;
+    $(data).each(function(){
+        var point = this[2].replace(/[()]/g, "").split(",");
+        var x = parseInt(point[0]) + Math.floor(worldWidth / 2);
+        var y = parseInt(point[1]) * -1 + Math.floor(worldHeight / 2);
+        ctx.fillRect(x, y, 1, 1);
+
+        if (mapdata[point[0] + "," + point[1]] == null) {
+            mapdata[point[0] + "," + point[1]] = this[0];
+        }
+    });
+    ctx.stroke();
+}
 
 // 全同盟を描画する
 function drawMapAll(dataList){
@@ -53,7 +81,11 @@ function drawMapAll(dataList){
     $(dataList).each(function(){
         drawMap(loadData(this[0], this[1]), this[1]);
     });
-    
+
+    $(npcList).each(function(){
+        drawNPC(loadDataNPC(this[0], this[1]), this[1]);
+    });
+
     var canvas = document.getElementById('map_canvas');
     var ctx = canvas.getContext("2d");
     var index = 0;
@@ -84,20 +116,15 @@ function drawMapAll(dataList){
 
 // Canvasの初期設定
 function initCanvas() {
-	
     var worldWidth = worldSize["x"];
     var worldHeight = worldSize["y"];
-	
 
-    $("#map_canvas").attr("width", worldWidth*scale + 1);
-    $("#map_canvas").attr("height", worldHeight*scale + 1);
-    
+    // Canvasの初期化
+    $("#map_canvas").attr("width", worldWidth * scale + 1);
+    $("#map_canvas").attr("height", worldHeight * scale + 1);
+
     var canvas = document.getElementById('map_canvas');
-	
-	
     var ctx = canvas.getContext("2d");
-	
-    
     ctx.scale(scale, scale);//描画倍率
 
     $("#mapDragArea").draggable({
@@ -107,10 +134,8 @@ function initCanvas() {
  		}
     });
 
-	
     ctx.fillStyle = "rgba(0, 0, 0, 1)";
-	ctx.clearRect(0,0,worldWidth*scale + 1,worldHeight*scale + 1);//再描画
-
+	ctx.clearRect(0,0,worldWidth * scale + 1, worldHeight * scale + 1); //再描画
     ctx.fillRect(0, 0, worldWidth + 1, worldHeight + 1);
     var divideNumber = Math.floor(worldSize.x / divideSize);
     
@@ -137,6 +162,16 @@ function loadData(data, color) {
     // 色分け凡例を出すために追加
     allianceInfos.push([csv[1][0], color]);
     
+    return csv;
+}
+
+function loadDataNPC(data, color) {
+    var text_data = data.replace("/\"/g", "");
+    var csv = parseSV(text_data, delimiter = "	");
+
+    // 色分け凡例を出すために追加
+    allianceInfos.push(["NPC", color]);
+
     return csv;
 }
 
@@ -183,6 +218,19 @@ $(document).ready(function(){
                 }
             });
         });
+
+        $(npc_data).each(function(){
+            var color = this[1];
+            $.ajax({
+                url: "./data/" + this[0],
+                type: 'get',
+                async: false,
+                dataType: "text",
+                success: function(data){
+                    npcList.push([data, color]);
+                }
+            });
+        });
         
         drawMapAll(dataList);
         alert("処理完了");
@@ -200,9 +248,9 @@ $(document).ready(function(){
 				// クリックするとマップの位置を表示
 				var mapX = $("#mapDragArea").offset().left;
 				var mapY = $("#mapDragArea").offset().top;
-			
-				var x = (e.pageX - 800*scale - mapX)/scale;
-				var y = (e.pageY * -1 + 800*scale + mapY)/scale;
+
+                var x = Math.floor((e.pageX - 800 * scale - mapX) / scale);
+                var y = Math.floor((e.pageY * -1 + 800 * scale + mapY) / scale) + 1;
 				var url = urlBase.replace("[x]", x).replace("[y]", y);
 				window.open(url, '_blank');
 			}
@@ -213,13 +261,20 @@ $(document).ready(function(){
     	var mapX = $("#mapDragArea").offset().left;
     	var mapY = $("#mapDragArea").offset().top;
     
-        var x = Math.floor((e.pageX - 800*scale - mapX)/scale);
-        var y = Math.floor((e.pageY * -1 + 800*scale + mapY)/scale);
-        
+        var x = Math.floor((e.pageX - 800 * scale - mapX) / scale);
+        var y = Math.floor((e.pageY * -1 + 800 * scale + mapY) / scale) + 1;
         $("#tooltip").css("display", "inline");
         $("#tooltip").css("left", e.pageX + 15);
         $("#tooltip").css("top", e.pageY - 5);
-        $("#tooltip").html(x + ", " + y);
+
+        var pointData = mapdata[x.toString() + "," + y.toString()];
+        if (pointData == null) {
+            $("#tooltip").html(x + ", " + y);
+        }
+        else {
+            $("#tooltip").html(x + ", " + y + "(" + pointData + ")");
+        }
+
     });
     
     $("#tooltip").mousemove(function(e){
