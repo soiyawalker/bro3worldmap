@@ -38,35 +38,121 @@ function drawMap(data, color) {
                 index += 1;
             });
             
-            ctx.fillRect(x, y, 1, 1);
+            ctx.fillRect(x, y + canvasMargin, 1, 1);
             mapdata[this[3] + "," + this[4]] = this[2] + ":" + [this[1], this[0]].join("@");
         }
     });
     ctx.stroke();
 };
 
-function drawNPC(data, color) {
+function drawNPC(data, color, myColor, enemyColor, myTouchColor, myCloseColor, enemyTouchColor, enemyCloseColor, compColor) {
     var worldWidth = worldSize["x"];
     var worldHeight = worldSize["y"];
     var canvas = document.getElementById('map_canvas');
     var ctx = canvas.getContext("2d");
 
-    // NPCのプロット
     ctx.beginPath();
-    ctx.fillStyle = color;
     ctx.globalAlpha = 1.0;
     ctx.globalCompositeOperation = "source-over";
     ctx.imageSmoothingEnabled = false;
+    
+    var index = 0;
+    var headers = data[1];
     $(data).each(function(){
-        var point = this[2].replace(/[()]/g, "").split(",");
-        var x = parseInt(point[0]) + Math.floor(worldWidth / 2);
-        var y = parseInt(point[1]) * -1 + Math.floor(worldHeight / 2);
-        ctx.fillRect(x, y, 1, 1);
-
-        if (mapdata[point[0] + "," + point[1]] == null) {
-            mapdata[point[0] + "," + point[1]] = this[0];
+        if (index > 1 && this.length > 10) {
+            // NPCのプロット
+            //ctx.fillStyle = color;
+            
+            if (this[2] == aName) {
+                ctx.fillStyle = myColor;
+            }
+            else if (this[2].length == 0){
+                var myCount = 0;
+                var enemyCount = 0;
+                var k = 0;
+                for (k = 3; k < 11; k++) {
+                    if (this[k] == aName) {
+                        myCount++;
+                    }
+                    else if (this[k].length == 0){
+                        
+                    }
+                    else {
+                        enemyCount++;
+                    }
+                }
+                
+                if (myCount == 8 && enemyCount == 0) {
+                    ctx.fillStyle = myCloseColor;
+                }
+                else if (myCount > 0 && enemyCount > 0) {
+                    ctx.fillStyle = compColor;
+                }
+                else if (myCount > 0 && enemyCount == 0) {
+                    ctx.fillStyle = myTouchColor;
+                }
+                else if (myCount == 0 && enemyCount == 8) {
+                    ctx.fillStyle = enemyCloseColor;
+                }
+                else if (myCount == 0 && enemyCount > 0) {
+                    ctx.fillStyle = enemyTouchColor;
+                }
+                else {
+                    ctx.fillStyle = color;
+                }
+                
+            }
+            else {
+                ctx.fillStyle = enemyColor;
+            }
+            
+            var point = this[0].split("(")[1].replace(/[()]/g, "").split(",");
+            var px = parseInt(point[0]);
+            var py = parseInt(point[1]);
+            var x = px + Math.floor(worldWidth / 2);
+            var y = py * -1 + Math.floor(worldHeight / 2);
+            
+            
+            ctx.fillRect(x - 2, y - 2 + canvasMargin, 4, 4);
+            
+            var toolStr = [
+                this[0] + "★" + this[1], 
+                headers[2] + ":" + this[2], 
+                headers[3] + ":" + this[3], 
+                headers[4] + ":" + this[4], 
+                headers[5] + ":" + this[5], 
+                headers[6] + ":" + this[6], 
+                headers[7] + ":" + this[7], 
+                headers[8] + ":" + this[8], 
+                headers[9] + ":" + this[9], 
+                headers[10] + ":" + this[10]
+            ].join("<br />")
+            var i = 0;
+            var j = 0;
+            for (i = -2; i < 3; i++){
+                for (j = -2; j < 3; j++){
+                    mapdata[(px + i) + "," + (py + j)] = toolStr;
+                }
+            }
+            
+            ctx.textBaseline = "top";
+            // ctx.fillStyle = "rgba(255, 255, 255, 1)";
+            // this[1]
+            var text = "";
+            if (this[0].indexOf("西砦") > 0 || this[0].indexOf("東砦") > 0){
+                text = this[0].split("(")[0].split("砦")[1]
+            }
+            else {
+                text = this[0].split("(")[0]
+            }
+            
+            ctx.fillText(text, x + 4, y - 6 + canvasMargin);
+            
         }
+        
+        index = index + 1;
     });
+    
     ctx.stroke();
 }
 
@@ -78,21 +164,25 @@ function drawMapAll(dataList){
     allianceInfos = [];
     
     // 描画処理
-    $(dataList).each(function(){
-        drawMap(loadData(this[0], this[1]), this[1]);
-    });
-
-    $(npcList).each(function(){
-        drawNPC(loadDataNPC(this[0], this[1]), this[1]);
-    });
+    if (getUrlVars()["nomap"]) {
+        $(npcList).each(function(){
+            drawNPC(loadDataNPC(this[0], this[1], this[2], this[3], this[4], this[5], this[6], this[7], this[8]), 
+                this[1], this[2], this[3], this[4], this[5], this[6], this[7], this[8]);
+        });
+    }
+    else {
+        $(dataList).each(function(){
+            drawMap(loadData(this[0], this[1]), this[1]);
+        });
+    }
 
     var canvas = document.getElementById('map_canvas');
     var ctx = canvas.getContext("2d");
     var index = 0;
-    var left = 10;
-    var top = 10;
+    var left = 140;
+    var top = 0;
     var colorWidth = 10;
-    var textWidth = 130;
+    var textWidth = 90;
     var height = 20;
     var margin = 2;
     var padding = 3;
@@ -104,11 +194,11 @@ function drawMapAll(dataList){
         ctx.textBaseline = "top";
         
         ctx.fillStyle = color;
-        ctx.fillRect(left, top + index * (height + margin), colorWidth, height);
+        ctx.fillRect(left + index * (colorWidth + textWidth), top + margin, colorWidth, height);
         ctx.fillStyle = "rgba(255, 255, 255, 1)";
-        ctx.fillRect(left + margin + colorWidth, top + index * (height + margin), textWidth, height);
+        ctx.fillRect(left + index * (colorWidth + textWidth) + margin + colorWidth, top + margin, textWidth, height);
         ctx.fillStyle = "rgba(0, 0, 0, 1)";
-        ctx.fillText(name, left + margin + colorWidth + padding, top + padding + index * (height + margin));
+        ctx.fillText(name, left + margin + index * (colorWidth + textWidth) + colorWidth + padding, top + padding + margin);
         
         index++;
     });
@@ -121,7 +211,7 @@ function initCanvas() {
 
     // Canvasの初期化
     $("#map_canvas").attr("width", worldWidth * scale + 1);
-    $("#map_canvas").attr("height", worldHeight * scale + 1);
+    $("#map_canvas").attr("height", (worldHeight + canvasMargin) * scale + 1);
 
     var canvas = document.getElementById('map_canvas');
     var ctx = canvas.getContext("2d");
@@ -135,8 +225,8 @@ function initCanvas() {
     });
 
     ctx.fillStyle = "rgba(0, 0, 0, 1)";
-	ctx.clearRect(0,0,worldWidth * scale + 1, worldHeight * scale + 1); //再描画
-    ctx.fillRect(0, 0, worldWidth + 1, worldHeight + 1);
+	ctx.clearRect(0, canvasMargin, worldWidth * scale + 1, worldHeight * scale + 1); //再描画
+    ctx.fillRect(0, canvasMargin, worldWidth + 1, worldHeight + 1);
     var divideNumber = Math.floor(worldSize.x / divideSize);
     
     // 枠線の描画
@@ -149,8 +239,8 @@ function initCanvas() {
             ctx.fillStyle = "rgba(150, 150, 150, 1)";
         }
         // lineToだと何故か線が2pxになるので、fillRectで代用
-        ctx.fillRect(i * divideSize, 0, 1, worldHeight + 1);
-        ctx.fillRect(0, i * divideSize, worldWidth + 1, 1);
+        ctx.fillRect(i * divideSize, canvasMargin, 1, worldHeight + 1);
+        ctx.fillRect(0, i * divideSize + canvasMargin, worldWidth + 1, 1);
         ctx.stroke();
     }
 }
@@ -165,12 +255,19 @@ function loadData(data, color) {
     return csv;
 }
 
-function loadDataNPC(data, color) {
+function loadDataNPC(data, color, myColor, enemyColor, myTouchColor, myCloseColor, enemyTouchColor, enemyCloseColor, compColor) {
     var text_data = data.replace("/\"/g", "");
     var csv = parseSV(text_data, delimiter = "	");
 
     // 色分け凡例を出すために追加
-    allianceInfos.push(["NPC", color]);
+    allianceInfos.push(["自同盟", myColor]);
+    allianceInfos.push(["敵同盟", enemyColor]);
+    allianceInfos.push(["未制圧 隣接なし", color]);
+    allianceInfos.push(["未制圧 自・隣接", myTouchColor]);
+    allianceInfos.push(["未制圧 自・包囲", myCloseColor]);
+    allianceInfos.push(["未制圧 敵・隣接", enemyTouchColor]);
+    allianceInfos.push(["未制圧 敵・包囲", enemyCloseColor]);
+    allianceInfos.push(["未制圧 競合", compColor]);
 
     return csv;
 }
@@ -200,37 +297,48 @@ $(document).ready(function(){
     defaultColors.enemyIndex = 0;
     defaultColors.neutralIndex = 0;
     
-	
     if (getUrlVars()["manual"]) {
         $("#formArea").css("display", "block");
         drawMapAll(dataList);
     }
     else {
-        $(alliances).each(function(){
-            var color = this[1];
-            $.ajax({
-                url: "./data/" + this[0], 
-                type: 'get', 
-                async: false, 
-                dataType: "text", 
-                success: function(data){
-                    dataList.push([data, color]);
-                }
+        if (getUrlVars()["nomap"]) {
+            $(npc_data).each(function(){
+                var color = this[1];
+                var myColor = this[2];
+                var enemyColor = this[3];
+                var myTouchColor = this[4];
+                var myCloseColor = this[5];
+                var enemyTouchColor = this[6];
+                var enemyCloseColor = this[7];
+                var compColor = this[8];
+                
+                $.ajax({
+                    url: "./data/" + this[0],
+                    type: 'get',
+                    async: false,
+                    dataType: "text",
+                    success: function(data){
+                        npcList.push([data, color, myColor, enemyColor, myTouchColor, myCloseColor, 
+                            enemyTouchColor, enemyCloseColor, compColor]);
+                    }
+                });
             });
-        });
-
-        $(npc_data).each(function(){
-            var color = this[1];
-            $.ajax({
-                url: "./data/" + this[0],
-                type: 'get',
-                async: false,
-                dataType: "text",
-                success: function(data){
-                    npcList.push([data, color]);
-                }
+        }
+        else {
+            $(alliances).each(function(){
+                var color = this[1];
+                $.ajax({
+                    url: "./data/" + this[0], 
+                    type: 'get', 
+                    async: false, 
+                    dataType: "text", 
+                    success: function(data){
+                        dataList.push([data, color]);
+                    }
+                });
             });
-        });
+        }
         
         drawMapAll(dataList);
         alert("処理完了");
@@ -262,7 +370,7 @@ $(document).ready(function(){
     	var mapY = $("#mapDragArea").offset().top;
     
         var x = Math.floor((e.pageX - 800 * scale - mapX) / scale);
-        var y = Math.floor((e.pageY * -1 + 800 * scale + mapY) / scale) + 1;
+        var y = Math.floor((e.pageY * -1 + 800 * scale + mapY + canvasMargin) / scale) + 1;
         $("#tooltip").css("display", "inline");
         $("#tooltip").css("left", e.pageX + 15);
         $("#tooltip").css("top", e.pageY - 5);
@@ -272,7 +380,7 @@ $(document).ready(function(){
             $("#tooltip").html(x + ", " + y);
         }
         else {
-            $("#tooltip").html(x + ", " + y + "(" + pointData + ")");
+            $("#tooltip").html(pointData);
         }
 
     });

@@ -8,6 +8,9 @@ var worldSize = {x: 1600, y: 1600};
 // 表示区画のサイズ
 var divideSize = 100;
 
+// キャンバスの上部マージン
+var canvasMargin = 24;
+
 // ファイル名と色の指定
 var alliances = [
     ["neko_data.csv", "rgba(0, 0, 255, 1)"], 
@@ -23,8 +26,16 @@ var alliances = [
 ]
 
 var npc_data = [
-    ["npc_list.txt", "rgba(201, 118, 116, 1)"]
+    [
+        "toride.txt", 
+        "rgba(201, 118, 116, 1)", "rgba(0, 0, 255, 1)", "rgba(127, 0, 0, 1)", 
+        "rgba(0, 127, 127, 1)", "rgba(0, 255, 255, 1)", 
+        "rgba(255, 255, 0, 1)", "rgba(255, 0, 0, 1)", 
+        "rgba(255, 0, 255, 1)"
+    ]
 ]
+
+var aName = "ねこめす(仮)";
 
 var urlBase = "http://m17.3gokushi.jp/map.php?x=[x]&y=[y]";
 
