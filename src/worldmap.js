@@ -56,6 +56,13 @@ function drawNPC(data, color, myColor, enemyColor, myTouchColor, myCloseColor, e
     ctx.globalCompositeOperation = "source-over";
     ctx.imageSmoothingEnabled = false;
     
+    var defaultFont = ctx.font;
+    if (scale > 1) {
+        ctx.font = "5px 'ＭＳ Ｐゴシック'";
+    }
+    else {
+        ctx.font = "10px 'ＭＳ Ｐゴシック'";
+    }
     var index = 0;
     var headers = data[1];
     $(data).each(function(){
@@ -140,19 +147,26 @@ function drawNPC(data, color, myColor, enemyColor, myTouchColor, myCloseColor, e
             // this[1]
             var text = "";
             if (this[0].indexOf("西砦") > 0 || this[0].indexOf("東砦") > 0){
-                text = this[0].split("(")[0].split("砦")[1]
+                if (scale > 1) {
+                    var splited = this[0].split("(")[0].split("砦");
+                    text = splited[0] + splited[1];
+                }
             }
             else {
-                text = this[0].split("(")[0]
+                text = this[0].split("(")[0].split("砦")[0];
             }
-            
-            ctx.fillText(text, x + 4, y - 6 + canvasMargin);
-            
+            if (text) {
+                var textBase = - 6;
+                if (scale > 1) {
+                    textBase = -2.5;
+                }
+                ctx.fillText(text, x + 4, y + textBase + canvasMargin);
+            }
         }
         
         index = index + 1;
     });
-    
+    ctx.font = defaultFont;
     ctx.stroke();
 }
 
@@ -242,6 +256,21 @@ function initCanvas() {
         ctx.fillRect(i * divideSize, canvasMargin, 1, worldHeight + 1);
         ctx.fillRect(0, i * divideSize + canvasMargin, worldWidth + 1, 1);
         ctx.stroke();
+    }
+
+    // 座標の描画
+    if (scale > 1) {
+        var defaultFont = ctx.font;
+        ctx.font = "5px 'ＭＳ Ｐゴシック'";
+        for (var i = 0; i < divideNumber + 1; i++) {
+            for (var j = 0; j < divideNumber + 1; j++) {
+                var x = i * divideSize;
+                var y = j * divideSize;
+                var text = "(" + ( x - worldWidth / 2) + "," + ( y - worldHeight / 2) + ")";
+                ctx.fillText(text, x + 2, y + 6 + canvasMargin);
+            }
+        }
+        ctx.font = defaultFont;
     }
 }
 
@@ -370,7 +399,7 @@ $(document).ready(function(){
     	var mapY = $("#mapDragArea").offset().top;
     
         var x = Math.floor((e.pageX - 800 * scale - mapX) / scale);
-        var y = Math.floor((e.pageY * -1 + 800 * scale + mapY + canvasMargin) / scale) + 1;
+        var y = Math.floor((e.pageY * -1 + 800 * scale + mapY + (canvasMargin * scale)) / scale) + 1;
         $("#tooltip").css("display", "inline");
         $("#tooltip").css("left", e.pageX + 15);
         $("#tooltip").css("top", e.pageY - 5);
