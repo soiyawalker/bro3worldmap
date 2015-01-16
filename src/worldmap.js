@@ -321,6 +321,47 @@ function initController(dataList){
 	
 }
 
+//お絵かきモード
+function initSketch(){
+	
+	var _h = $("#canvasWrapper").height();
+	var _w = $("#canvasWrapper").width();
+	
+	
+	$('<canvas id="simple_sketch2" width="'+_w+'" height="'+_h+'" style="position:absolute;top:0"></canvas>').appendTo('#canvasWrapper').hide()
+	
+	$('<div class="tools" id="sktTools" style="font-size:78%;margin-top:8px"><a href="#simple_sketch2" data-tool="marker" style="display:block;float:left;border:1px solid #999;padding:3px;margin-right:4px;">書く</a><a href="#simple_sketch2" data-tool="eraser" style="display:block;float:left;border:1px solid #999;padding:3px">消す</a></div>').appendTo('#controller').hide()
+	
+	$.each(['#f00', '#ff0', '#0f0', '#0ff', '#00f', '#f0f', '#000', '#fff'], function(i) {
+	if(i==0){
+      $('#controller .tools').append("<a href='#simple_sketch2' data-color='" + this + "' style='width: 15px;height:15px;display:block;float:left;margin-top:5px;clear:both;background: " + this + ";'></a> ");
+      }else{
+      $('#controller .tools').append("<a href='#simple_sketch2' data-color='" + this + "' style='width: 15px;height:15px;display:block;float:left;margin-top:5px;background: " + this + ";'></a> ");
+      }
+    });
+    $.each([3, 5, 10, 15], function(i) {
+    	if(i==0){
+	      $('#controller .tools').append("<a href='#simple_sketch2' data-size='" + this + "' style='display:block;float:left;border:1px solid #999;padding:3px;clear:both;margin-top:8px'>" + this + "</a> ");
+        }else{
+	      $('#controller .tools').append("<a href='#simple_sketch2' data-size='" + this + "' style='display:block;float:left;border:1px solid #999;padding:3px;margin-top:8px'>" + this + "</a> ");
+		}
+    });
+    
+	$('#simple_sketch2').sketch({defaultColor: "#ff0"});
+	
+	//コントローラにスイッチ追加
+	$("#controller dl").append('<dt style="float:left;width:60px;font-size:78%;clear:both;">お絵かき</dt><dd style="margin-left:70px;"><select id="sketchChanger"><option value="OFF">OFF</option><option value="on">ON</option></select></dd>')
+
+	//お絵かきモードD/L動作
+	$("#sketchChanger").change(function(){
+		if($(this).val()=="on"){
+			$('#simple_sketch2,#sktTools').show();
+		}else{
+			$('#simple_sketch2,#sktTools').hide();
+		}
+	})
+}
+
 $(document).ready(function(){
     defaultColors.friendIndex = 0;
     defaultColors.enemyIndex = 0;
@@ -374,6 +415,8 @@ $(document).ready(function(){
     }
 
 	initController(dataList);
+	
+	initSketch();
     
     // 開発中の機能(URLパラメータ「dev=true」で有効化)
     if (getUrlVars()["dev"]) {
