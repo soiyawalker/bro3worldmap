@@ -35,7 +35,7 @@ var npc_data = [
     ]
 ]
 
-var aName = "ねこめす(仮)";
+var aName = "ねこぱんち";
 
 var urlBase = "http://m17.3gokushi.jp/map.php?x=[x]&y=[y]";
 

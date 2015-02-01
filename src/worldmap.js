@@ -73,7 +73,7 @@ function drawNPC(data, color, myColor, enemyColor, myTouchColor, myCloseColor, e
             if (this[2] == aName) {
                 ctx.fillStyle = myColor;
             }
-            else if (this[2].length == 0){
+            else if (this[2].length == 0 || this[2] == "-"){
                 var myCount = 0;
                 var enemyCount = 0;
                 var k = 0;
